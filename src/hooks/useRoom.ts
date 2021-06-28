@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
 
+import { useAuth } from "./useAuth";
+
 import { database } from "../services/firebase";
 
-// type FirebaseQuestions = Record<
-//   string,
-//   {
-//     author: {
-//       name: string;
-//       avatar: string;
-//     };
-//     content: string;
-//     isAnswered: boolean;
-//     isHighlighted: boolean;
-//   }
-// >;
+type FirebaseQuestions = Record<
+  string,
+  {
+    author: {
+      name: string;
+      avatar: string;
+    };
+    content: string;
+    isAnswered: boolean;
+    isHighlighted: boolean;
+    likes: Record<
+      string,
+      {
+        authorId: string;
+      }
+    >;
+  }
+>;
 
 type QuestionType = {
   id: string;
@@ -24,51 +32,46 @@ type QuestionType = {
   content: string;
   isAnswered: boolean;
   isHighlighted: boolean;
+  likeCount: number;
+  likeId: string | undefined;
 };
 
 export function useRoom(roomId: string) {
+  const { user } = useAuth();
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [title, setTitle] = useState("");
 
   useEffect(() => {
     const roomRef = database.ref(`/rooms/${roomId}`);
-    roomRef.once("value", (room) => {
+
+    roomRef.on("value", (room) => {
       const databaseRoom = room.val();
+      const firebaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {};
 
-      // const firebaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {};
-
-      // const parsedQuestions = Object.entries(firebaseQuestions).map(
-      //   ([key, value]) => {
-      //     return {
-      //       id: key,
-      //       ...value,
-      //     };
-      //   }
-      // );
-      setTitle(databaseRoom.title);
-      // setQuestions(parsedQuestions);
-    });
-
-    const questionsRef = database.ref(`/rooms/${roomId}/questions`);
-
-    questionsRef.on("child_added", (question) => {
-      const parsedQuestion = { id: question.key, ...question.val() };
-      setQuestions((prevState) => prevState.concat(parsedQuestion));
-    });
-
-    questionsRef.on("child_removed", (question) => {
-      setQuestions((prevState) =>
-        prevState.filter((questionSaved) => {
-          return questionSaved.id !== question.key;
-        })
+      const parsedQuestions = Object.entries(firebaseQuestions).map(
+        ([key, value]) => {
+          return {
+            id: key,
+            content: value.content,
+            author: value.author,
+            isHighlighted: value.isHighlighted,
+            isAnswered: value.isAnswered,
+            likeCount: Object.values(value.likes ?? {}).length,
+            likeId: Object.entries(value.likes ?? {}).find(
+              ([key, value]) => value.authorId === user?.id
+            )?.[0],
+          };
+        }
       );
+      setTitle(databaseRoom.title);
+      setQuestions(parsedQuestions);
     });
 
     return () => {
-      questionsRef.off();
+      roomRef.off("value");
       setQuestions([]);
     };
-  }, [roomId]);
+  }, [roomId, user?.id]);
 
   return { questions, title };
 }

@@ -1,9 +1,6 @@
-import { useState } from "react";
-
 import { useParams } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import { useAuth } from "../hooks/useAuth";
 import { useRoom } from "../hooks/useRoom";
 
 import { RoomCode } from "../components/RoomCode";
