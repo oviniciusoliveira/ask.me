@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "rooms": {
+      ".read": "",
+      ".write": "",
+      "$room_id": {
+        ".read": "",
+        ".write": "",
+        "questions": {
+          ".read": "",
+          ".write": "",
+          "likes": {
+            ".read": "",
+            ".write": ""
+          }
+        }
+      }
+    }
+  }
+}

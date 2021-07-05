@@ -1,1 +1,21 @@
 # Ask.me
+
+- [ ] Adicionar Eslint; Prettier; EditorConfig
+- [ ] Refatorar Sistema de Pastas/Componentes/Estilização
+- [ ] Criar Logo Ask.me
+- [ ] Ao criar sala, redirecionar para visão de admin
+- [ ] Ao entrar na sala, caso o usuário seja o dono, mostrar a visão de admin
+- [ ] Apenas o dono da sala pode ver a sala na visão de admin
+- [ ] Modal de Exclusão de Pergunta (Utilizar a lib React-Modal)
+- [ ] Listar Todas as Salas Abertas
+- [ ] Opção de voltar para a listagem de salas
+- [ ] Toasts:
+  - [ ] Ao criar pergunta
+  - [ ] Highlight da pergunta
+  - [ ] Answered pergunta
+  - [ ] Deletar pergunta
+- [ ] Responsividade (https://www.youtube.com/watch?v=H91DhKPjhPk)
+- [ ] Tema Dark
+  - [ ] Captar preferência do usuário
+- [ ] PWA (Procurar por: Create React App PWA)
+- [ ] Github (Mais ideias: https://github.com/rocketseat-education/nlw-06-reactjs)
